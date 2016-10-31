@@ -13,7 +13,7 @@ export default class Tab extends Component {
         let imgStyle = {
             width: 16,
             height: 16,
-            margin: 1
+            margin: 2
         };
         let src = this.props.img ? this.props.img : 'img/tab.png';
         return (

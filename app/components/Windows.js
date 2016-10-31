@@ -20,7 +20,7 @@ export default class Windows extends Component {
         var windows = []
         for (var i = 0; i < this.props.windows.length; i++) {
             let window = this.props.windows[i];
-            windows.push(<Window key={i} name={window.name} window={window} wactions={this.props.wactions}/>);
+            windows.push(<Window key={i} name={window.name} disableClose={this.props.disableClose} window={window} wactions={this.props.wactions}/>);
         }
         return (
             <div>

@@ -36,6 +36,14 @@ export function savedWindow(window) {
     return {type: types.SAVED_WINDOW, window: window}
 }
 
+export function deleteWindow(window) {
+    return {type: types.DELETE_WINDOW, window: window}
+}
+
+export function deletedWindow(window) {
+    return {type: types.DELETED_WINDOW, window: window}
+}
+
 // export function updateWindow(window) {
 //     return {type: types.UPDATE_WINDOW}
 // }
@@ -63,7 +71,8 @@ export function serviceFetchRemoteWindows() {
         })).then((response) => {
             return response.json()
         }).then((data) => {
-            let convertedData = data.filter(convertRemoteWindow);
+            let convertedData = data.map(convertRemoteWindow);
+            console.log(convertedData);
             dispatch(fetchedRemoteWindows(convertedData));
         })
     }
@@ -71,7 +80,7 @@ export function serviceFetchRemoteWindows() {
 
 export function serviceSaveWindow(window) {
     return dispatch => {
-        dispatch(saveWindow(window))
+        dispatch(saveWindow(window));
         if (!window.remoteId) {
             fetch('http://localhost:8000/api/v1/anydata/', fetchParams({
                 method: 'POST',
@@ -97,12 +106,24 @@ export function serviceSaveWindow(window) {
             })).then((response) => {
                 return response.json();
             }).then((body) => {
-                console.log(body)
                 let window = convertRemoteWindow(body);
                 dispatch(savedWindow(window));
             });
         }
+    }
+}
 
+
+export function serviceDeleteWindow(window) {
+    return dispatch => {
+        dispatch(deleteWindow(window));
+        if (window.remoteId) {
+            fetch(`http://localhost:8000/api/v1/anydata/${window.remoteId}/`, fetchParams({
+                method: 'DELETE'
+            })).then((response) => {
+                dispatch(deletedWindow(window));
+            });
+        }
     }
 }
 

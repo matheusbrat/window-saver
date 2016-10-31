@@ -2,16 +2,12 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Windows from '../components/Windows'
-import Header from '../components/Header';
-import MainSection from '../components/MainSection';
-import * as TodoActions from '../actions/todos';
-import * as WindowsActions from '../actions/windows';
 import style from './App.css';
+import * as WindowsActions from '../actions/windows';
 
 @connect(
     state => state,
     dispatch => ({
-        actions: bindActionCreators(TodoActions, dispatch),
         wactions: bindActionCreators(WindowsActions, dispatch)
     })
 )
@@ -47,11 +43,14 @@ export default class App extends Component {
         // });
         return (
             <div className={style.normal}>
-                <Windows title="Current opened" windows={this.props.windows.localWindows} wactions={this.props.wactions}/>
-                <Windows title="In the cloud" windows={this.props.windows.remoteWindows} wactions={this.props.wactions}/>
-                <Header addTodo={actions.addTodo}/>
-                <Windows title="" wactions=""/>
-                <MainSection todos={todos} actions={actions}/>
+                <Windows title="Current opened"
+                         windows={this.props.windows.localWindows}
+                         wactions={this.props.wactions}
+                         disableClose="1"
+                />
+                <Windows title="In the cloud"
+                         windows={this.props.windows.remoteWindows}
+                         wactions={this.props.wactions} />
             </div>
         );
     }

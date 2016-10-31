@@ -4,7 +4,8 @@ import Tabs from './Tabs'
 export default class Window extends Component {
 
     static defaultProps = {
-        name: "Press to set window name"
+        name: "Press to set window name",
+        disableClose:false
     }
 
     constructor(props, context) {
@@ -13,6 +14,10 @@ export default class Window extends Component {
 
     saveWindow(window) {
         this.props.wactions.serviceSaveWindow(window);
+    }
+
+    deleteWindow(window) {
+        this.props.wactions.serviceDeleteWindow(window);
     }
 
     render() {
@@ -32,13 +37,15 @@ export default class Window extends Component {
             float: 'right',
             marginTop: 2
         };
+        let actions = [];
+        if (!this.props.disableClose) {
+            actions.push(<a onClick={this.deleteWindow.bind(this, this.props.window)}><img style={imgStyle} src="img/remove.png"/></a>)
+        }
+        actions.push(<a onClick={this.saveWindow.bind(this, this.props.window)}><img style={imgStyle}  src="img/save.png"/></a>)
         return (
             <div style={divStyle}>
                 <div style={imgDivStyle}>
-                    <a onClick={this.saveWindow.bind(this, this.props.window)}><img style={imgStyle}
-                                                                                    src="img/remove.png"/></a>
-                    <a onClick={this.saveWindow.bind(this, this.props.window)}><img style={imgStyle}
-                                                                                    src="img/save.png"/></a>
+                    {actions}
                 </div>
                 <h2 style={h2Style}>{this.props.name}</h2>
                 <Tabs tabs={this.props.window.tabs}/>

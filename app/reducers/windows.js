@@ -67,16 +67,28 @@ export default function windows(state = initialState, action) {
             //     }
             // }
             // return newState;
-            let remoteWindows = Array().concat(state.remoteWindows, action.window);
+            var savedRemoteWindows = Array().concat(state.remoteWindows, action.window);
             return Object.assign({}, state, {
-                remoteWindows: remoteWindows
+                remoteWindows: savedRemoteWindows
             });
-
         // case ActionTypes.UPDATE_WINDOW:
         //     remoteWindows = Array().concat(state.remoteWindows, action.window);
         //     return Object.assign({}, state, {
         //         remoteWindows: remoteWindows
         //     });
+        case ActionTypes.DELETE_WINDOW:
+            return state;
+
+        case ActionTypes.DELETED_WINDOW:
+            var deletedRemoteWindow = Object.assign({}, state, {
+                remoteWindows: state.remoteWindows.filter((window) => {
+                    if (window.remoteId != action.window.remoteId) {
+                        return window;
+                    }
+                })
+            });
+            
+            return deletedRemoteWindow;
         default:
             return state;
 
