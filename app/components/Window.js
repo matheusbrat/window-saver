@@ -12,7 +12,7 @@ export default class Window extends Component {
     }
 
     saveWindow(window) {
-        this.props.wactions.saveWindow(window);
+        this.props.wactions.serviceSaveWindow(window);
     }
 
     render() {
