@@ -59,23 +59,11 @@ export default function windows(state = initialState, action) {
             return state
 
         case ActionTypes.SAVED_WINDOW:
-            // let newState = Object.assign({}, state, {});
-            // for (var i in newState.windows) {
-            //     if (newState.windows[i].localId == action.window.localId) {
-            //         newState.windows[i].remoteId = action.window.remoteId;
-            //         newState.windows[i].tabs = action.window.tabs;
-            //     }
-            // }
-            // return newState;
             var savedRemoteWindows = Array().concat(state.remoteWindows, action.window);
             return Object.assign({}, state, {
                 remoteWindows: savedRemoteWindows
             });
-        // case ActionTypes.UPDATE_WINDOW:
-        //     remoteWindows = Array().concat(state.remoteWindows, action.window);
-        //     return Object.assign({}, state, {
-        //         remoteWindows: remoteWindows
-        //     });
+
         case ActionTypes.DELETE_WINDOW:
             return state;
 
@@ -89,6 +77,26 @@ export default function windows(state = initialState, action) {
             });
             
             return deletedRemoteWindow;
+
+        case ActionTypes.UPDATE_WINDOW:
+            return state;
+
+        case ActionTypes.UPDATED_WINDOW:
+            let index = state.remoteWindows.findIndex((window) => {
+                console.log(window.remoteId == action.window.remoteId);
+                return window.remoteId == action.window.remoteId;
+            });
+            console.log(index);
+            return Object.assign({}, state,
+                {
+                    remoteWindows:
+                        state.remoteWindows.slice(0, index)
+                            .concat([
+                                action.window
+                            ])
+                            .concat(state.remoteWindows.slice(index + 1))
+                })
+
         default:
             return state;
 

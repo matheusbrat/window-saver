@@ -44,13 +44,14 @@ export function deletedWindow(window) {
     return {type: types.DELETED_WINDOW, window: window}
 }
 
-// export function updateWindow(window) {
-//     return {type: types.UPDATE_WINDOW}
-// }
+export function updatedWindow(window) {
+    return {type: types.UPDATED_WINDOW, window: window}
+}
 
-// export function updatedWindow(window) {
-//     return {type: }
-// }
+export function updateWindow(window) {
+    return {type: types.UPDATE_WINDOW};
+}
+
 
 export function serviceFetchLocalWindows() {
     return dispatch => {
@@ -100,14 +101,14 @@ export function serviceSaveWindow(window) {
                 method: 'PUT',
                 body: JSON.stringify({
                     'name': 'tabs',
-                    'key': window.localId,
+                    'key': window.remoteId,
                     'data': JSON.stringify(window)
                 })
             })).then((response) => {
                 return response.json();
             }).then((body) => {
                 let window = convertRemoteWindow(body);
-                dispatch(savedWindow(window));
+                dispatch(updatedWindow(window));
             });
         }
     }

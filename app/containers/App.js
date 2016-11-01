@@ -16,7 +16,6 @@ export default class App extends Component {
     static propTypes = {
         todos: PropTypes.array.isRequired,
         windows: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired,
         wactions: PropTypes.object.isRequired
     };
 
