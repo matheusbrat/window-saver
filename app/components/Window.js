@@ -10,7 +10,7 @@ export default class Window extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {editing: false}
+        this.state = {editing: false, monitoring: this.props.monitoring}
     }
 
     componentDidMount() {

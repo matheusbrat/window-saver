@@ -28,7 +28,19 @@ const initialState = {
     fetchingLocalWindows: false,
     fetchingRemoteWindows: false,
     localWindows: [],
-    remoteWindows: []
+    remoteWindows: [],
+    monitorWindows: {}
+}
+
+function cleanLocalWindows(monitorWindows, localWindows) {
+    console.log("cleanLocalWindows", monitorWindows, localWindows);
+    let cleanedLocalWindows = localWindows.filter((window) => {
+        if (!Object.keys(monitorWindows).includes(window.localId.toString())) {
+            return window;
+        }
+    });
+    console.log("cleaned", cleanedLocalWindows)
+    return cleanedLocalWindows;
 }
 
 export default function windows(state = initialState, action) {
@@ -46,8 +58,7 @@ export default function windows(state = initialState, action) {
 
         case ActionTypes.FETCHED_LOCAL_WINDOWS:
             return Object.assign({}, state, {
-                localWindows: action.windows,
-                fetchingLocalWindows: false
+                localWindows: cleanLocalWindows(state.monitorWindows, action.windows)
             });
 
         case ActionTypes.FETCH_REMOTE_WINDOWS:
@@ -106,21 +117,12 @@ export default function windows(state = initialState, action) {
             return state;
 
         case ActionTypes.MONITORING_WINDOW:
-            let monitorIndex = state.localWindows.findIndex((window) => {
-                return window.localId == action.localId;
+            let monitorWindows = state.monitorWindows;
+            monitorWindows[action.window.localId] = action.window;
+            return Object.assign({}, state, {
+                monitorWindows: monitorWindows,
+                localWindows: cleanLocalWindows(monitorWindows, state.localWindows)
             });
-            let updatedWindow = state.localWindows[monitorIndex];
-            updatedWindow.monitoring = true;
-            return Object.assign({}, state,
-                {
-                    localWindows:
-                        state.localWindows.slice(0, monitorIndex)
-                            .concat([
-                                updatedWindow
-                            ])
-                            .concat(state.localWindows.slice(monitorIndex + 1))
-                });
-            return state;
 
         default:
             return state;

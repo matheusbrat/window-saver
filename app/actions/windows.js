@@ -58,8 +58,8 @@ export function monitorWindow(window) {
     return {type: types.MONITOR_WINDOW, window: window};
 }
 
-export function monitoringWindow(windowId) {
-    return {type: types.MONITORING_WINDOW, localId: windowId}
+export function monitoringWindow(window) {
+    return {type: types.MONITORING_WINDOW, window: window}
 }
 
 
@@ -92,12 +92,7 @@ export function serviceFetchRemoteWindows() {
 export function serviceMonitorWindow(window) {
     return dispatch => {
         dispatch(monitorWindow(window));
-        console.log("tamo dispatchando", window)
-        if (window.localId) {
-            chrome.runtime.sendMessage({monitor: window.localId}, (response) => {
-                dispatch(monitoringWindow(response));
-            });
-        }
+        dispatch(monitoringWindow(window));
     }
 }
 

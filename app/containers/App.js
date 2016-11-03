@@ -40,15 +40,16 @@ export default class App extends Component {
         //         return window;
         //     }
         // });
+        let monitoringWindows = Object.values(this.props.windows.monitorWindows);
         return (
             <div className={style.normal}>
-                <Windows title="Current opened"
-                         windows={this.props.windows.localWindows}
+                <Windows title="Monitoring"
+                         windows={monitoringWindows}
                          wactions={this.props.wactions}
                          disableClose="1"
                 />
-                <Windows title="In the cloud"
-                         windows={this.props.windows.remoteWindows}
+                <Windows title="Opened"
+                         windows={this.props.windows.localWindows}
                          wactions={this.props.wactions} />
             </div>
         );
