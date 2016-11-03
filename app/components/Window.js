@@ -13,6 +13,14 @@ export default class Window extends Component {
         this.state = {editing: false}
     }
 
+    componentDidMount() {
+
+    }
+
+    componenWillUnmount() {
+
+    }
+
     changeTitle() {
         this.setState({editing: true});
     }
@@ -24,6 +32,7 @@ export default class Window extends Component {
     }
 
     changedTitle(title) {
+        alert('dadada')
         this.props.window.name = title;
         this.props.wactions.updatedWindow(this.props.window);
         this.setState({editing: false});
@@ -34,11 +43,16 @@ export default class Window extends Component {
         this.props.wactions.serviceSaveWindow(window);
     }
 
+    monitorWindow(window) {
+        this.props.wactions.serviceMonitorWindow(window);
+    }
+
     deleteWindow(window) {
         this.props.wactions.serviceDeleteWindow(window);
     }
 
     render() {
+        console.log(this.props);
         let divStyle = {
             display: 'table',
             marginBottom: 10,
@@ -60,7 +74,7 @@ export default class Window extends Component {
         if (!this.props.disableClose) {
             actions.push(<a key="remove" onClick={this.deleteWindow.bind(this, this.props.window)}><img style={imgStyle} src="img/remove.png"/></a>)
         }
-        actions.push(<a key="save" onClick={this.saveWindow.bind(this, this.props.window)}><img style={imgStyle}  src="img/save.png"/></a>)
+        actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img style={imgStyle}  src="img/save.png"/></a>)
 
         let title = <h2 onClick={this.changeTitle.bind(this)} style={h2Style}>{this.props.name}</h2>
         if (this.state.editing) {

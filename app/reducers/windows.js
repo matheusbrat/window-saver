@@ -38,6 +38,12 @@ export default function windows(state = initialState, action) {
                 fetchingLocalWindows: true
             });
 
+        case ActionTypes.NEW_LOCAL_WINDOW:
+            var localWindows = Array().concat(state.localWindows, action.window);
+            return Object.assign({}, state, {
+                localWindows: localWindows
+            });
+
         case ActionTypes.FETCHED_LOCAL_WINDOWS:
             return Object.assign({}, state, {
                 localWindows: action.windows,
@@ -86,7 +92,6 @@ export default function windows(state = initialState, action) {
                 console.log(window.remoteId == action.window.remoteId);
                 return window.remoteId == action.window.remoteId;
             });
-            console.log(index);
             return Object.assign({}, state,
                 {
                     remoteWindows:
@@ -95,7 +100,27 @@ export default function windows(state = initialState, action) {
                                 action.window
                             ])
                             .concat(state.remoteWindows.slice(index + 1))
-                })
+                });
+
+        case ActionTypes.MONITOR_WINDOW:
+            return state;
+
+        case ActionTypes.MONITORING_WINDOW:
+            let monitorIndex = state.localWindows.findIndex((window) => {
+                return window.localId == action.localId;
+            });
+            let updatedWindow = state.localWindows[monitorIndex];
+            updatedWindow.monitoring = true;
+            return Object.assign({}, state,
+                {
+                    localWindows:
+                        state.localWindows.slice(0, monitorIndex)
+                            .concat([
+                                updatedWindow
+                            ])
+                            .concat(state.localWindows.slice(monitorIndex + 1))
+                });
+            return state;
 
         default:
             return state;
