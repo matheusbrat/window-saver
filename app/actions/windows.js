@@ -1,5 +1,6 @@
 import * as types from '../constants/ActionTypes';
 import ChromePromise from 'chrome-promise';
+import * as windowsHelpers from '../utils/windows';
 
 function fetchParams(params) {
     return Object.assign({
@@ -63,12 +64,14 @@ export function monitoringWindow(window) {
 }
 
 
+// Services:
+
 export function serviceFetchLocalWindows() {
     return dispatch => {
         dispatch(fetchLocalWindows());
         const chromep = new ChromePromise();
         chromep.windows.getAll({populate: true}).then((windows) => {
-            windows = convertLocalWindows(windows);
+            windows = windowsHelpers.convertLocalWindows(windows);
             dispatch(fetchedLocalWindows(windows));
         });
     }
@@ -82,8 +85,7 @@ export function serviceFetchRemoteWindows() {
         })).then((response) => {
             return response.json()
         }).then((data) => {
-            let convertedData = data.map(convertRemoteWindow);
-            console.log(convertedData);
+            let convertedData = data.map(windowsHelpers.convertRemoteWindow);
             dispatch(fetchedRemoteWindows(convertedData));
         })
     }
@@ -110,7 +112,7 @@ export function serviceSaveWindow(window) {
             })).then((response) => {
                 return response.json();
             }).then((body) => {
-                let window = convertRemoteWindow(body);
+                let window = windowsHelpers.convertRemoteWindow(body);
                 dispatch(savedWindow(window));
             });
         } else {
@@ -124,7 +126,7 @@ export function serviceSaveWindow(window) {
             })).then((response) => {
                 return response.json();
             }).then((body) => {
-                let window = convertRemoteWindow(body);
+                let window = windowsHelpers.convertRemoteWindow(body);
                 dispatch(updatedWindow(window));
             });
         }
@@ -143,35 +145,4 @@ export function serviceDeleteWindow(window) {
             });
         }
     }
-}
-
-function convertRemoteWindow(body) {
-    let data = JSON.parse(body.data);
-    data['remoteId'] = body.id;
-    delete data['localId'];
-    return data;
-}
-
-function convertLocalWindows(windows) {
-    let processedWindows = []
-    for (var x in windows) {
-        let item = windows[x];
-        let processedWindow = {localId: item.id, tabs: convertLocalTabs(item.tabs)}
-        processedWindows.push(processedWindow)
-    }
-    return processedWindows;
-}
-
-function convertLocalTabs(tabs) {
-    let processedTabs = []
-    for (var x in tabs) {
-        let item = tabs[x];
-        let processedTab = {
-            img: item.favIconUrl ? item.favIconUrl : '',
-            title: item.title,
-            link: item.url
-        };
-        processedTabs.push(processedTab);
-    }
-    return processedTabs;
 }

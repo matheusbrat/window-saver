@@ -1,5 +1,14 @@
 const bluebird = require('bluebird');
+const windowsHelpers = require('../../app/utils/windows.js');
+import * as arrayHelpers from '../../app/utils/arrays';
+
 global.Promise = bluebird;
+
+// TODO: If a window is opening with an ID that is already on monitoring, invalidate monitoring id
+// TODO: Add window open event to see how ids work (closing and reopening an window result on different id?)
+// TODO: If monitoring exists but window doesn't, change button to open that window
+// TODO: Tab url sometimes doesn't come with value, based on this checking all tabs agains monitoring could not work on open
+
 
 function promisifier(method) {
     // return a function
@@ -33,52 +42,19 @@ promisifyAll(chrome.storage, [
 //     });
 // });
 
-function convertLocalWindows(windows) {
-    let processedWindows = []
-    for (var x in windows) {
-        let processedWindow = convertLocalWindow(windows[x]);
-        processedWindows.push(processedWindow);
-    }
-    return processedWindows;
-}
-
-function convertLocalWindow(window) {
-    let processedWindow = {localId: window.id, tabs: convertLocalTabs(window.tabs)};
-    return processedWindow;
-}
-
-function convertLocalTabs(tabs) {
-    let processedTabs = []
-    for (var x in tabs) {
-        let item = tabs[x];
-        let processedTab = {
-            img: item.favIconUrl ? item.favIconUrl : '',
-            title: item.title,
-            link: item.url
-        };
-        processedTabs.push(processedTab);
-    }
-    return processedTabs;
-}
 
 function tabAction(windowId, isWindowClosing=false) {
-    console.log(windowId, isWindowClosing);
     chrome.storage.local.get((storage) => {
         let state = storage.state;
         if (Object.keys(state.windows.monitorWindows).includes(windowId.toString())) {
-            console.log("Chegou aqui", isWindowClosing)
-            if (isWindowClosing) {
-                delete state.windows.monitorWindows[windowId];
-                chrome.storage.local.set({state: state});
-            } else {
-                console.log("calling chrome.windows.get", windowId);
+            if (!isWindowClosing) {
                 chrome.windows.get(windowId, {populate: true}, (window) => {
                     if (window) {
-                        let windowUpdated = convertLocalWindow(window);
+                        let windowUpdated = windowsHelpers.convertLocalWindow(window);
+                        windowUpdated.monitoring = true;
                         state.windows.monitorWindows[windowId] = windowUpdated;
                     } else {
                         delete state.windows.monitorWindows[windowId];
-
                     }
                     chrome.storage.local.set({state: state});
                 });
@@ -147,8 +123,60 @@ chrome.tabs.onRemoved.addListener((tab, removeInfo) => {
 //     }
 // });
 
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
 
 
-// chrome.windows.onCreated.addListener((window) => {
-//     console.log(chrome.storage);
-// });
+chrome.windows.onCreated.addListener((windowCreated) => {
+    console.log("New Window opened has an ID", windowCreated.id, windowCreated.tabs);
+    chrome.windows.getAll((windows) => {
+        let windowsIds = windows.map((window) => {
+            return window.id;
+        });
+        chrome.storage.local.get((storage) => {
+            chrome.windows.get(windowCreated.id, {populate: true}, (windowCreated) => {
+                windowCreated = windowsHelpers.convertLocalWindow(windowCreated);
+                Object.keys(storage.state.windows.monitorWindows).forEach((key) => {
+                    let mWindow = storage.state.windows.monitorWindows[key];
+                    if (!windowsIds.includes(mWindow.localId)) {
+                        let windowCreatedTabsUrls = windowCreated.tabs.map((tab) => {
+                            return tab.link;
+                        });
+                        let mWindowTabsUrls = mWindow.tabs.map((tab) => {
+                            return tab.link
+                        });
+                        if (arrayHelpers.sameMembers(windowCreatedTabsUrls, mWindowTabsUrls)) {
+                            delete storage.state.windows.monitorWindows[key];
+                            windowCreated.monitoring = true;
+                            storage.state.windows.monitorWindows[windowCreated.localId] = windowCreated;
+                            chrome.storage.local.set(storage);
+                        }
+                    }
+                });
+            });
+        });
+    });
+});
+
+chrome.windows.onRemoved.addListener((windowId) => {
+    chrome.storage.local.get((storage) => {
+        let removedWindow = storage.state.windows.monitorWindows[windowId];
+        removedWindow.monitoring = false;
+        delete storage.state.windows.monitorWindows[windowId];
+        let newId = "_" + windowId;
+        if (newId in Object.keys(storage.state.windows.monitorWindows)) {
+            newId = guid();
+        }
+        storage.state.windows.monitorWindows[newId] = removedWindow;
+        chrome.storage.local.set(storage);
+    });
+
+    console.log("Window closed had an ID", windowId);
+});

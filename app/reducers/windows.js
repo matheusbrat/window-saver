@@ -33,13 +33,11 @@ const initialState = {
 }
 
 function cleanLocalWindows(monitorWindows, localWindows) {
-    console.log("cleanLocalWindows", monitorWindows, localWindows);
     let cleanedLocalWindows = localWindows.filter((window) => {
         if (!Object.keys(monitorWindows).includes(window.localId.toString())) {
             return window;
         }
     });
-    console.log("cleaned", cleanedLocalWindows)
     return cleanedLocalWindows;
 }
 
