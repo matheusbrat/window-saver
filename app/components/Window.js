@@ -34,7 +34,6 @@ export default class Window extends Component {
     }
 
     render() {
-        console.log(this.props);
         let divStyle = {
             display: 'table',
             marginBottom: 10,
