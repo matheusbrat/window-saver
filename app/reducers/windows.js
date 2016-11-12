@@ -1,27 +1,3 @@
-// {
-//     fetchingLocalWindows: false
-//     fetchingRemoteWindows: false
-//     localWindows: [
-//
-//     ]
-//     remoteWindows: [
-//         {
-//             title: "Some Random Title",
-//             windows: [
-//                 {
-//                     name: 'window name',
-//                     tabs: [
-//                         {
-//                             alt: '',
-//                             link: '',
-//                             image: '',
-//                         }
-//                     ]
-//                 }
-//             ]
-//         }
-//     ]
-// }
 import * as ActionTypes from '../constants/ActionTypes';
 
 const initialState = {
@@ -96,24 +72,10 @@ export default function windows(state = initialState, action) {
         case ActionTypes.UPDATE_WINDOW:
             return state;
 
-        case ActionTypes.UPDATED_WINDOW:
-            let index = state.remoteWindows.findIndex((window) => {
-                console.log(window.remoteId == action.window.remoteId);
-                return window.remoteId == action.window.remoteId;
-            });
-            return Object.assign({}, state,
-                {
-                    remoteWindows:
-                        state.remoteWindows.slice(0, index)
-                            .concat([
-                                action.window
-                            ])
-                            .concat(state.remoteWindows.slice(index + 1))
-                });
-
         case ActionTypes.MONITOR_WINDOW:
             return state;
 
+        case ActionTypes.UPDATED_WINDOW:
         case ActionTypes.MONITORING_WINDOW:
             let monitorWindows = state.monitorWindows;
             monitorWindows[action.window.localId] = action.window;

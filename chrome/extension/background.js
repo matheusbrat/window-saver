@@ -52,6 +52,7 @@ function tabAction(windowId, isWindowClosing=false) {
                     if (window) {
                         let windowUpdated = windowsHelpers.convertLocalWindow(window);
                         windowUpdated.monitoring = true;
+                        windowUpdated.name = state.windows.monitorWindows[windowId].name;
                         state.windows.monitorWindows[windowId] = windowUpdated;
                     } else {
                         delete state.windows.monitorWindows[windowId];
@@ -152,11 +153,15 @@ chrome.windows.onCreated.addListener((windowCreated) => {
                         let mWindowTabsUrls = mWindow.tabs.map((tab) => {
                             return tab.link
                         });
+                        console.log(mWindowTabsUrls,windowCreatedTabsUrls, arrayHelpers.sameMembers(windowCreatedTabsUrls, mWindowTabsUrls));
                         if (arrayHelpers.sameMembers(windowCreatedTabsUrls, mWindowTabsUrls)) {
-                            delete storage.state.windows.monitorWindows[key];
+                            let clonedStorage = Object.assign({}, storage);
                             windowCreated.monitoring = true;
-                            storage.state.windows.monitorWindows[windowCreated.localId] = windowCreated;
-                            chrome.storage.local.set(storage);
+                            windowCreated.name = storage.state.windows.monitorWindows[key].name;
+                            delete clonedStorage.state.windows.monitorWindows[key];
+                            clonedStorage.state.windows.monitorWindows[windowCreated.localId] = windowCreated;
+                            console.log(clonedStorage, "Setting chrome storage local with this clonedStorage");
+                            chrome.storage.local.set(clonedStorage);
                         }
                     }
                 });
@@ -174,6 +179,7 @@ chrome.windows.onRemoved.addListener((windowId) => {
         if (newId in Object.keys(storage.state.windows.monitorWindows)) {
             newId = guid();
         }
+        removedWindow.localId = newId;
         storage.state.windows.monitorWindows[newId] = removedWindow;
         chrome.storage.local.set(storage);
     });
