@@ -26,10 +26,3 @@ export function convertLocalTabs(tabs) {
     }
     return processedTabs;
 }
-
-export function convertRemoteWindow(body) {
-    let data = JSON.parse(body.data);
-    data['remoteId'] = body.id;
-    delete data['localId'];
-    return data;
-}

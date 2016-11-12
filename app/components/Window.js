@@ -6,12 +6,11 @@ export default class Window extends Component {
 
     static defaultProps = {
         name: "Press to set window name",
-        disableClose: false
     }
 
     constructor(props, context) {
         super(props, context);
-        this.state = {editing: false, monitoring: this.props.monitoring}
+        this.state = {editing: false, monitoring: this.props.window.monitoring}
     }
 
     changeTitle() {
@@ -20,8 +19,12 @@ export default class Window extends Component {
 
     _handleKeyPressed(e) {
         if (e.key === 'Enter') {
-            this.changedTitle(e.target.value);
+            this.changeTitleWithEvent(e);
         }
+    }
+
+    changeTitleWithEvent(e) {
+        this.changedTitle(e.target.value);
     }
 
     changedTitle(title) {
@@ -32,19 +35,31 @@ export default class Window extends Component {
 
     monitorWindow(window) {
         this.props.wactions.serviceMonitorWindow(window);
+        this.setState({monitoring: true});
+    }
+
+    stopMonitoring(window) {
+        window.monitoring = false;
+        this.props.wactions.stopMonitoringWindow(window);
+        this.setState({monitoring: false});
     }
 
     render() {
-        let actions = [];
-        // if (!this.props.disableClose) {
-        //     actions.push(<a key="remove" onClick={this.deleteWindow.bind(this, this.props.window)}><img style={imgStyle} src="img/remove.png"/></a>)
-        // }
-        actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image"  src="img/save.png"/></a>)
 
-        let title = <h2 onClick={this.changeTitle.bind(this)} className="title">{this.props.name}</h2>
-        if (this.state.editing) {
-            title = <input ref={input => input && input.focus()} onKeyUp={this._handleKeyPressed.bind(this)}/>
+        let actions = [];
+        let title = <h3 className="title">{this.props.name}</h3>
+        if (this.state.monitoring) {
+            actions.push(<a key="remove" onClick={this.stopMonitoring.bind(this, this.props.window)}><img className="action-image" src="img/remove.png"/></a>)
+            title = <h3 onClick={this.changeTitle.bind(this)} className="title">{this.props.name}</h3>
+            if (this.state.editing) {
+                title = <input className="edit-name" defaultValue={this.props.name} onBlur={this.changeTitleWithEvent.bind(this)} ref={input => input && input.focus()} onKeyUp={this._handleKeyPressed.bind(this)}/>
+            }
         }
+        if (!this.state.monitoring) {
+            actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image"  src="img/save.png"/></a>)
+
+        }
+
         return (
             <Style stylesheet={WINDOW_STYLE}>
                 <div className="window">
@@ -73,10 +88,15 @@ const WINDOW_STYLE = `
 & .actions {
     float: right;
     margin-top: 2px;
+    margin-right: 5px;
 }
 
 & .action-image {
     width: 16px;
     height: 16px;
+}
+
+& .edit-name {
+    border-color: #FFFFFF;
 }
 `

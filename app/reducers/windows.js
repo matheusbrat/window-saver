@@ -2,7 +2,6 @@ import * as ActionTypes from '../constants/ActionTypes';
 
 const initialState = {
     fetchingLocalWindows: false,
-    fetchingRemoteWindows: false,
     localWindows: [],
     remoteWindows: [],
     monitorWindows: {}
@@ -18,16 +17,11 @@ function cleanLocalWindows(monitorWindows, localWindows) {
 }
 
 export default function windows(state = initialState, action) {
+    let monitorWindows;
     switch (action.type) {
         case ActionTypes.FETCH_LOCAL_WINDOWS:
             return Object.assign({}, state, {
                 fetchingLocalWindows: true
-            });
-
-        case ActionTypes.NEW_LOCAL_WINDOW:
-            var localWindows = Array().concat(state.localWindows, action.window);
-            return Object.assign({}, state, {
-                localWindows: localWindows
             });
 
         case ActionTypes.FETCHED_LOCAL_WINDOWS:
@@ -35,49 +29,25 @@ export default function windows(state = initialState, action) {
                 localWindows: cleanLocalWindows(state.monitorWindows, action.windows)
             });
 
-        case ActionTypes.FETCH_REMOTE_WINDOWS:
-            return Object.assign({}, state, {
-                fetchingRemoteWindows: true
-            });
-
-        case ActionTypes.FETCHED_REMOTE_WINDOWS:
-            return Object.assign({}, state, {
-                remoteWindows: action.windows,
-                fetchingRemoteWindows: false,
-            });
-
-        case ActionTypes.SAVE_WINDOW:
-            return state
-
-        case ActionTypes.SAVED_WINDOW:
-            var savedRemoteWindows = Array().concat(state.remoteWindows, action.window);
-            return Object.assign({}, state, {
-                remoteWindows: savedRemoteWindows
-            });
-
-        case ActionTypes.DELETE_WINDOW:
-            return state;
-
-        case ActionTypes.DELETED_WINDOW:
-            var deletedRemoteWindow = Object.assign({}, state, {
-                remoteWindows: state.remoteWindows.filter((window) => {
-                    if (window.remoteId != action.window.remoteId) {
-                        return window;
-                    }
-                })
-            });
-            
-            return deletedRemoteWindow;
-
         case ActionTypes.UPDATE_WINDOW:
             return state;
 
         case ActionTypes.MONITOR_WINDOW:
             return state;
 
+        case ActionTypes.STOP_MONITORING_WINDOW:
+            monitorWindows = state.monitorWindows;
+            let localWindows = state.localWindows;
+            localWindows.push(monitorWindows[action.window.localId]);
+            delete monitorWindows[action.window.localId];
+            return Object.assign({}, state, {
+                monitorWindows: monitorWindows,
+                localWindows: cleanLocalWindows(monitorWindows, localWindows)
+            });
+
         case ActionTypes.UPDATED_WINDOW:
         case ActionTypes.MONITORING_WINDOW:
-            let monitorWindows = state.monitorWindows;
+            monitorWindows = state.monitorWindows;
             monitorWindows[action.window.localId] = action.window;
             return Object.assign({}, state, {
                 monitorWindows: monitorWindows,

@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import Window from './Window'
+import Window from './Window';
+import Style from 'react-inline-css';
 
 export default class Windows extends Component {
 
@@ -20,13 +21,21 @@ export default class Windows extends Component {
         var windows = []
         for (var i = 0; i < this.props.windows.length; i++) {
             let window = this.props.windows[i];
-            windows.push(<Window key={i} name={window.name} disableClose={this.props.disableClose} window={window} wactions={this.props.wactions}/>);
+            windows.push(<Window key={i} name={window.name} window={window} wactions={this.props.wactions}/>);
         }
         return (
-            <div>
-                <h2>{this.props.title}</h2>
-                {windows}
-            </div>
+            <Style stylesheet={WINDOWS_STYLE}>
+                <div>
+                    <h2 className="window-title">{this.props.title}</h2>
+                    {windows}
+                </div>
+            </Style>
         );
     }
 }
+
+const WINDOWS_STYLE = `
+& .window-title {
+    text-align: center;
+}
+`

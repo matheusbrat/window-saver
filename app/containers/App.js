@@ -25,7 +25,6 @@ export default class App extends Component {
 
     componentWillMount() {
         this.props.wactions.serviceFetchLocalWindows();
-        this.props.wactions.serviceFetchRemoteWindows();
     }
 
     render() {
@@ -35,14 +34,15 @@ export default class App extends Component {
         return (
             <Style stylesheet={APP_STYLE}>
                 <div className="normal">
-                    <Windows title="Monitoring"
+                    <Windows title="Syncing"
                              windows={monitoringWindows}
                              wactions={this.props.wactions}
-                             disableClose="1"
                     />
+                    <hr className="separator"/>
                     <Windows title="Opened"
                              windows={this.props.windows.localWindows}
-                             wactions={this.props.wactions} />
+                             wactions={this.props.wactions}
+                    />
                 </div>
             </Style>
         );
@@ -52,4 +52,23 @@ export default class App extends Component {
 const APP_STYLE = `
 & .normal {
     background: #fff;
-}`
+}
+& .separator {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #000;
+    margin: 1em 0;
+    padding: 0; 
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 14px;
+    font-weight: bold;
+}
+`
