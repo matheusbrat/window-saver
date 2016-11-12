@@ -133,7 +133,6 @@ export function serviceSaveWindow(window) {
     }
 }
 
-
 export function serviceDeleteWindow(window) {
     return dispatch => {
         dispatch(deleteWindow(window));

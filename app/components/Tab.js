@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import Style from 'react-inline-css';
 
 export default class Tab extends Component {
 
@@ -7,20 +8,26 @@ export default class Tab extends Component {
     }
 
     render() {
-        let tabStyle = {
-            float: 'left'
-        };
-        let imgStyle = {
-            width: 16,
-            height: 16,
-            margin: 2
-        };
         let src = this.props.img ? this.props.img : 'img/tab.png';
         return (
-            <div style={tabStyle}>
-                <a href={this.props.link} title={this.props.title}><img url={this.props.link} src={src}
-                                                                        style={imgStyle}/></a>
-            </div>
+            <Style stylesheet={TAB_STYLE}>
+                <div className="tab">
+                    <a href={this.props.link} title={this.props.title}><img url={this.props.link} src={src}
+                                                                            className="icon"/></a>
+                </div>
+            </Style>
         );
     }
 }
+
+const TAB_STYLE = `
+& .tab {
+    float: left;
+}
+
+& .icon {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+}
+`

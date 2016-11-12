@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import Windows from '../components/Windows'
-import style from './App.css';
+import Windows from '../components/Windows';
 import * as WindowsActions from '../actions/windows';
+import Style from 'react-inline-css';
 
 @connect(
     state => state,
@@ -11,10 +11,10 @@ import * as WindowsActions from '../actions/windows';
         wactions: bindActionCreators(WindowsActions, dispatch)
     })
 )
+
 export default class App extends Component {
 
     static propTypes = {
-        todos: PropTypes.array.isRequired,
         windows: PropTypes.object.isRequired,
         wactions: PropTypes.object.isRequired
     };
@@ -30,30 +30,26 @@ export default class App extends Component {
 
     render() {
         const {windows, todos, actions, wactions} = this.props;
-        // let localWindows = windows.windows.filter((window) => {
-        //     if (window.localId) {
-        //         return window;
-        //     }
-        // });
-        // let remoteWindows = windows.windows.filter((window) => {
-        //     if (window.remoteId) {
-        //         return window;
-        //     }
-        // });
+
         let monitoringWindows = Object.values(this.props.windows.monitorWindows);
         return (
-            <div className={style.normal}>
-                <Windows title="Monitoring"
-                         windows={monitoringWindows}
-                         wactions={this.props.wactions}
-                         disableClose="1"
-                />
-                <Windows title="Opened"
-                         windows={this.props.windows.localWindows}
-                         wactions={this.props.wactions} />
-            </div>
+            <Style stylesheet={APP_STYLE}>
+                <div className="normal">
+                    <Windows title="Monitoring"
+                             windows={monitoringWindows}
+                             wactions={this.props.wactions}
+                             disableClose="1"
+                    />
+                    <Windows title="Opened"
+                             windows={this.props.windows.localWindows}
+                             wactions={this.props.wactions} />
+                </div>
+            </Style>
         );
     }
 }
 
-
+const APP_STYLE = `
+& .normal {
+    background: #fff;
+}`
