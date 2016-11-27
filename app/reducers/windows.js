@@ -39,7 +39,9 @@ export default function windows(state = initialState, action) {
         case ActionTypes.STOP_MONITORING_WINDOW:
             monitorWindows = state.monitorWindows;
             let localWindows = state.localWindows;
-            localWindows.push(monitorWindows[action.window.localId]);
+            if (action.window.localId.toString().indexOf("_") === -1) {
+                localWindows.push(monitorWindows[action.window.localId]);
+            }
             delete monitorWindows[action.window.localId];
             return Object.assign({}, state, {
                 monitorWindows,

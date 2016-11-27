@@ -7,7 +7,7 @@ export default class Windows extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
         wactions: PropTypes.object.isRequired,
-        windowType: PropTypes.object.isRequired
+        windowType: PropTypes.any.isRequired
     }
 
     static defaultProps = {

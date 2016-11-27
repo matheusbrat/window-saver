@@ -34,11 +34,18 @@ export default class SyncWindow extends Window {
         this.setState({ monitoring: false });
     }
 
+    openWindow(window) {
+        let links = window.tabs.map((tab) => {
+            return tab.link;
+        });
+        chrome.windows.create({url: links});
+    }
+
     buildMonitoringActions() {
         let actions = [];
         if (!this.state.monitoring) {
             actions.push(
-                <a key="open" onClick={this.stopMonitoring.bind(this, this.props.window)}>
+                <a key="open" onClick={this.openWindow.bind(this, this.props.window)}>
                     <img className="action-image" src="img/open.png" />
                 </a>
             );
