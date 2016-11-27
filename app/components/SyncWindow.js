@@ -38,7 +38,14 @@ export default class SyncWindow extends Window {
         let links = window.tabs.map((tab) => {
             return tab.link;
         });
-        chrome.windows.create({url: links});
+        let openConfig = {
+            url: links,
+            width: window.width,
+            height: window.height,
+            top: window.top,
+            left: window.left
+        };
+        chrome.windows.create(openConfig);
     }
 
     buildMonitoringActions() {

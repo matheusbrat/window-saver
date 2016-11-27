@@ -30,7 +30,6 @@ promisifyAll(chrome.storage, [
 
 
 function tabAction(windowId, isWindowClosing = false) {
-
     chrome.storage.local.get((storage) => {
         let state = storage.state ? storage.state : {};
         if (state.hasOwnProperty('windows') && Object.keys(state.windows.monitorWindows).includes(windowId.toString())) {

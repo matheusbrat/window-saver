@@ -10,6 +10,10 @@ export function convertLocalWindows(windows) {
 
 export function convertLocalWindow(window) {
     let processedWindow = { localId: window.id, tabs: convertLocalTabs(window.tabs) };
+    processedWindow.width = window.width;
+    processedWindow.height = window.height;
+    processedWindow.top = window.top;
+    processedWindow.left = window.left;
     return processedWindow;
 }
 
