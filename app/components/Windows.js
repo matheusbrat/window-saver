@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import Window from './Window';
 import Style from 'react-inline-css';
 
@@ -20,10 +20,10 @@ export default class Windows extends Component {
     }
 
     render() {
-        var windows = []
+        var windows = [];
         for (var i = 0; i < this.props.windows.length; i++) {
             let window = this.props.windows[i];
-            windows.push(<this.props.windowType key={i} name={window.name} window={window} wactions={this.props.wactions}/>);
+            windows.push(<this.props.windowType key={i} name={window.name} window={window} wactions={this.props.wactions} />);
         }
         return (
             <Style stylesheet={WINDOWS_STYLE}>
@@ -40,4 +40,4 @@ const WINDOWS_STYLE = `
 & .window-title {
     text-align: center;
 }
-`
+`;

@@ -14,7 +14,7 @@
     "comma-dangle": 0,
     "spaced-comment": 0,
     "global-require": 0,
-    "indent": ["error", 4],
+    "indent": ["error", 4, { "SwitchCase": 1 }],
     "max-len": ["error", 120]
   },
   "plugins": [

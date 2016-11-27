@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import Style from 'react-inline-css';
 
 export default class Tab extends Component {
@@ -12,8 +12,9 @@ export default class Tab extends Component {
         return (
             <Style stylesheet={TAB_STYLE}>
                 <div className="tab">
-                    <a href={this.props.link} title={this.props.title}><img url={this.props.link} src={src}
-                                                                            className="icon"/></a>
+                    <a href={this.props.link} title={this.props.title}>
+                        <img url={this.props.link} src={src} className="icon" />
+                    </a>
                 </div>
             </Style>
         );
@@ -30,4 +31,4 @@ const TAB_STYLE = `
     height: 16px;
     margin: 2px;
 }
-`
+`;

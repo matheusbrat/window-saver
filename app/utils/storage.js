@@ -1,5 +1,5 @@
 function saveState(state) {
-    chrome.storage.local.set({state: state});
+    chrome.storage.local.set({ state });
 }
 
 export default function () {

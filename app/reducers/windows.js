@@ -5,13 +5,14 @@ const initialState = {
     localWindows: [],
     remoteWindows: [],
     monitorWindows: {}
-}
+};
 
 function cleanLocalWindows(monitorWindows, localWindows) {
     let cleanedLocalWindows = localWindows.filter((window) => {
         if (!Object.keys(monitorWindows).includes(window.localId.toString())) {
             return window;
         }
+        return;
     });
     return cleanedLocalWindows;
 }
@@ -41,7 +42,7 @@ export default function windows(state = initialState, action) {
             localWindows.push(monitorWindows[action.window.localId]);
             delete monitorWindows[action.window.localId];
             return Object.assign({}, state, {
-                monitorWindows: monitorWindows,
+                monitorWindows,
                 localWindows: cleanLocalWindows(monitorWindows, localWindows)
             });
 
@@ -50,12 +51,11 @@ export default function windows(state = initialState, action) {
             monitorWindows = state.monitorWindows;
             monitorWindows[action.window.localId] = action.window;
             return Object.assign({}, state, {
-                monitorWindows: monitorWindows,
+                monitorWindows,
                 localWindows: cleanLocalWindows(monitorWindows, state.localWindows)
             });
 
         default:
             return state;
-
     }
 }

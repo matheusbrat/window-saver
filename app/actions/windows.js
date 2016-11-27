@@ -8,23 +8,23 @@ export function fetchLocalWindows() {
 }
 
 export function fetchedLocalWindows(windows) {
-    return { type: types.FETCHED_LOCAL_WINDOWS, windows: windows };
+    return { type: types.FETCHED_LOCAL_WINDOWS, windows };
 }
 
 export function updatedWindow(window) {
-    return { type: types.UPDATED_WINDOW, window: window };
+    return { type: types.UPDATED_WINDOW, window };
 }
 
 export function monitorWindow(window) {
-    return { type: types.MONITOR_WINDOW, window: window };
+    return { type: types.MONITOR_WINDOW, window };
 }
 
 export function monitoringWindow(window) {
-    return { type: types.MONITORING_WINDOW, window: window };
+    return { type: types.MONITORING_WINDOW, window };
 }
 
 export function stopMonitoringWindow(window) {
-    return { type: types.STOP_MONITORING_WINDOW, window: window };
+    return { type: types.STOP_MONITORING_WINDOW, window };
 }
 
 // Services:

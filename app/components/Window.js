@@ -1,32 +1,32 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import Tabs from './Tabs';
 import Style from 'react-inline-css';
 
 export default class Window extends Component {
 
     static defaultProps = {
-        name: "Press to set window name",
+        name: 'Press to set window name',
     }
 
     constructor(props, context) {
         super(props, context);
-        this.state = {editing: false, monitoring: this.props.window.monitoring}
+        this.state = { editing: false, monitoring: this.props.window.monitoring };
     }
 
     monitorWindow(window) {
         this.props.wactions.serviceMonitorWindow(window);
-        this.setState({monitoring: true});
+        this.setState({ monitoring: true });
     }
 
     buildMonitoringActions() {
         let actions = [];
-        actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image"  src="img/save.png"/></a>)
-        return actions
+        actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image" src="img/save.png" /></a>);
+        return actions;
     }
 
     buildTitle() {
-        let title = <h3 className="title">{this.props.name}</h3>
-        return title
+        let title = <h3 className="title">{this.props.name}</h3>;
+        return title;
     }
 
     render() {
@@ -40,8 +40,8 @@ export default class Window extends Component {
                     <div className="actions">
                         {actions}
                     </div>
-                    { title }
-                    <Tabs tabs={this.props.window.tabs}/>
+                    {title}
+                    <Tabs tabs={this.props.window.tabs} />
                 </div>
             </Style>
         );
@@ -73,4 +73,4 @@ const WINDOW_STYLE = `
 & .edit-name {
     border-color: #FFFFFF;
 }
-`
+`;

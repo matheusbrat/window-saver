@@ -1,6 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Windows from '../components/Windows';
 import SyncWindow from '../components/SyncWindow';
 import * as WindowsActions from '../actions/windows';
@@ -21,7 +21,7 @@ export default class App extends Component {
     };
 
     static defaultProps = {
-        windows: {'windows': []}
+        windows: { 'windows': [] }
     }
 
     componentWillMount() {
@@ -29,21 +29,21 @@ export default class App extends Component {
     }
 
     render() {
-        const {windows, todos, actions, wactions} = this.props;
+        const { windows, todos, actions, wactions } = this.props;
 
         let monitoringWindows = Object.values(this.props.windows.monitorWindows);
         return (
             <Style stylesheet={APP_STYLE}>
                 <div className="normal">
                     <Windows title="Syncing"
-                             windows={monitoringWindows}
-                             wactions={this.props.wactions}
-                             windowType={SyncWindow}
+                      windows={monitoringWindows}
+                      wactions={this.props.wactions}
+                      windowType={SyncWindow}
                     />
-                    <hr className="separator"/>
+                    <hr className="separator" />
                     <Windows title="Opened"
-                             windows={this.props.windows.localWindows}
-                             wactions={this.props.wactions}
+                      windows={this.props.windows.localWindows}
+                      wactions={this.props.wactions}
                     />
                 </div>
             </Style>
@@ -73,4 +73,4 @@ h3 {
     font-size: 14px;
     font-weight: bold;
 }
-`
+`;
