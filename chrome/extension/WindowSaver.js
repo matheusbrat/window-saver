@@ -5,7 +5,7 @@ import './window_saver.css';
 
 chrome.storage.local.get('state', obj => {
     const { state } = obj;
-    const initialState = state; //JSON.parse(state || '{}');
+    const initialState = state || {}; //JSON.parse(state || '{}');
 
     const createStore = require('../../app/store/configureStore');
     ReactDOM.render(

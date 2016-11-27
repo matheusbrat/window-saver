@@ -22,18 +22,18 @@ function promisifyAll(obj, list) {
 promisifyAll(chrome, [
     'tabs',
     'windows',
-    'browserAction',
-    'contextMenus'
 ]);
+
 promisifyAll(chrome.storage, [
     'local',
 ]);
 
 
 function tabAction(windowId, isWindowClosing = false) {
+
     chrome.storage.local.get((storage) => {
-        const state = storage.state;
-        if (Object.keys(state.windows.monitorWindows).includes(windowId.toString())) {
+        let state = storage.state ? storage.state : {};
+        if (state.hasOwnProperty('windows') && Object.keys(state.windows.monitorWindows).includes(windowId.toString())) {
             if (!isWindowClosing) {
                 chrome.windows.get(windowId, { populate: true }, (window) => {
                     if (window) {
@@ -121,14 +121,16 @@ chrome.windows.onCreated.addListener((windowCreated) => {
 chrome.windows.onRemoved.addListener((windowId) => {
     chrome.storage.local.get((storage) => {
         let removedWindow = storage.state.windows.monitorWindows[windowId];
-        removedWindow.monitoring = false;
-        delete storage.state.windows.monitorWindows[windowId];
-        let newId = '_' + windowId;
-        if (newId in Object.keys(storage.state.windows.monitorWindows)) {
-            newId = '_' + guid();
+        if (removedWindow) {
+            removedWindow.monitoring = false;
+            delete storage.state.windows.monitorWindows[windowId];
+            let newId = '_' + windowId;
+            if (newId in Object.keys(storage.state.windows.monitorWindows)) {
+                newId = '_' + guid();
+            }
+            removedWindow.localId = newId;
+            storage.state.windows.monitorWindows[newId] = removedWindow;
+            chrome.storage.local.set(storage);
         }
-        removedWindow.localId = newId;
-        storage.state.windows.monitorWindows[newId] = removedWindow;
-        chrome.storage.local.set(storage);
     });
 });

@@ -10,5 +10,5 @@ const enhancer = compose(
 );
 
 export default function (initialState) {
-    return createStore(rootReducer, initialState);
+    return createStore(rootReducer, initialState, enhancer);
 }

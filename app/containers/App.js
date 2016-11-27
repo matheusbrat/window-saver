@@ -29,7 +29,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { windows, todos, actions, wactions } = this.props;
+        const { windows, actions, wactions } = this.props;
 
         let monitoringWindows = Object.values(this.props.windows.monitorWindows);
         return (
