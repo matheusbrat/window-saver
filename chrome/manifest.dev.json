@@ -1,16 +1,16 @@
 {
   "version": "0.0.0",
-  "name": "react-chrome-extension-example",
+  "name": "window-saver",
   "manifest_version": 2,
-  "description": "Example for react-chrome-extension-boilerplate",
+  "description": "Extension that let you save a window, monitor it, close it and reopen later.",
   "browser_action": {
-    "default_title": "React Chrome Extension Example",
+    "default_title": "Window Saver",
     "default_popup": "popup.html"
   },
   "icons": {
-    "16": "img/icon-16.png",
-    "48": "img/icon-48.png",
-    "128": "img/icon-128.png"
+    "16": "img/icon-16x16.png",
+    "24": "img/icon-24x24.png",
+    "32": "img/icon-32x32.png"
   },
   "background": {
     "page": "background.html"
@@ -20,10 +20,7 @@
     "management",
     "tabs",
     "storage",
-    "https://github.com/*",
     "chrome://favicon/"
   ],
   "content_security_policy": "script-src 'self' http://localhost:3000 'unsafe-eval'; object-src 'self'"
 }
-
-//  "content_security_policy": "default-src 'self'; script-src 'self' http://www.reddit.com http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:8000 http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"

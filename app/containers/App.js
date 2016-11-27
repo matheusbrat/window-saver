@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Windows from '../components/Windows';
+import SyncWindow from '../components/SyncWindow';
 import * as WindowsActions from '../actions/windows';
 import Style from 'react-inline-css';
 
@@ -37,6 +38,7 @@ export default class App extends Component {
                     <Windows title="Syncing"
                              windows={monitoringWindows}
                              wactions={this.props.wactions}
+                             windowType={SyncWindow}
                     />
                     <hr className="separator"/>
                     <Windows title="Opened"

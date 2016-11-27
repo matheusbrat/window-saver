@@ -4,7 +4,7 @@ const customPath = path.join(__dirname, './customPublicPath');
 
 module.exports = {
     entry: {
-        todoapp: [customPath, path.join(__dirname, '../chrome/extension/todoapp')],
+        windowSaver: [customPath, path.join(__dirname, '../chrome/extension/windowSaver')],
         background: [customPath, path.join(__dirname, '../chrome/extension/background')],
     },
     output: {

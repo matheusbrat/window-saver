@@ -15,9 +15,9 @@ export default class Tabs extends Component {
     }
 
     render() {
-        var tabs = []
-        for (var i = 0; i < this.getTabs().length; i++) {
-            var tab = this.props.tabs[i];
+        let tabs = []
+        for (let i = 0; i < this.getTabs().length; i++) {
+            let tab = this.props.tabs[i];
             tabs.push(<Tab key={i} title={tab.title} img={tab.img} link={tab.link}/>);
         }
         return (

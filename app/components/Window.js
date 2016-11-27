@@ -13,52 +13,26 @@ export default class Window extends Component {
         this.state = {editing: false, monitoring: this.props.window.monitoring}
     }
 
-    changeTitle() {
-        this.setState({editing: true});
-    }
-
-    _handleKeyPressed(e) {
-        if (e.key === 'Enter') {
-            this.changeTitleWithEvent(e);
-        }
-    }
-
-    changeTitleWithEvent(e) {
-        this.changedTitle(e.target.value);
-    }
-
-    changedTitle(title) {
-        this.props.window.name = title;
-        this.props.wactions.updatedWindow(this.props.window);
-        this.setState({editing: false});
-    }
-
     monitorWindow(window) {
         this.props.wactions.serviceMonitorWindow(window);
         this.setState({monitoring: true});
     }
 
-    stopMonitoring(window) {
-        window.monitoring = false;
-        this.props.wactions.stopMonitoringWindow(window);
-        this.setState({monitoring: false});
+    buildMonitoringActions() {
+        let actions = [];
+        actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image"  src="img/save.png"/></a>)
+        return actions
+    }
+
+    buildTitle() {
+        let title = <h3 className="title">{this.props.name}</h3>
+        return title
     }
 
     render() {
-
-        let actions = [];
-        let title = <h3 className="title">{this.props.name}</h3>
-        if (this.state.monitoring) {
-            actions.push(<a key="remove" onClick={this.stopMonitoring.bind(this, this.props.window)}><img className="action-image" src="img/remove.png"/></a>)
-            title = <h3 onClick={this.changeTitle.bind(this)} className="title">{this.props.name}</h3>
-            if (this.state.editing) {
-                title = <input className="edit-name" defaultValue={this.props.name} onBlur={this.changeTitleWithEvent.bind(this)} ref={input => input && input.focus()} onKeyUp={this._handleKeyPressed.bind(this)}/>
-            }
-        }
-        if (!this.state.monitoring) {
-            actions.push(<a key="save" onClick={this.monitorWindow.bind(this, this.props.window)}><img className="action-image"  src="img/save.png"/></a>)
-
-        }
+        let title = this.buildTitle();
+        let actions;
+        actions = this.buildMonitoringActions();
 
         return (
             <Style stylesheet={WINDOW_STYLE}>

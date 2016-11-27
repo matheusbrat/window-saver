@@ -6,11 +6,13 @@ export default class Windows extends Component {
 
     static propTypes = {
         title: PropTypes.string.isRequired,
-        wactions: PropTypes.object.isRequired
+        wactions: PropTypes.object.isRequired,
+        windowType: PropTypes.object.isRequired
     }
 
     static defaultProps = {
-        windows: []
+        windows: [],
+        windowType: Window
     }
 
     constructor(props, context) {
@@ -21,7 +23,7 @@ export default class Windows extends Component {
         var windows = []
         for (var i = 0; i < this.props.windows.length; i++) {
             let window = this.props.windows[i];
-            windows.push(<Window key={i} name={window.name} window={window} wactions={this.props.wactions}/>);
+            windows.push(<this.props.windowType key={i} name={window.name} window={window} wactions={this.props.wactions}/>);
         }
         return (
             <Style stylesheet={WINDOWS_STYLE}>

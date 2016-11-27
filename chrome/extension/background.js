@@ -5,7 +5,6 @@ import * as arrayHelpers from '../../app/utils/arrays';
 global.Promise = bluebird;
 
 // TODO: If a window is opening with an ID that is already on monitoring, invalidate monitoring id
-// TODO: Add window open event to see how ids work (closing and reopening an window result on different id?)
 // TODO: If monitoring exists but window doesn't, change button to open that window
 // TODO: Tab url sometimes doesn't come with value, based on this checking all tabs agains monitoring could not work on open
 
@@ -136,7 +135,6 @@ function guid() {
 
 
 chrome.windows.onCreated.addListener((windowCreated) => {
-    console.log("New Window opened has an ID", windowCreated.id, windowCreated.tabs);
     chrome.windows.getAll((windows) => {
         let windowsIds = windows.map((window) => {
             return window.id;
@@ -153,7 +151,6 @@ chrome.windows.onCreated.addListener((windowCreated) => {
                         let mWindowTabsUrls = mWindow.tabs.map((tab) => {
                             return tab.link
                         });
-                        console.log(mWindowTabsUrls,windowCreatedTabsUrls, arrayHelpers.sameMembers(windowCreatedTabsUrls, mWindowTabsUrls));
                         if (arrayHelpers.sameMembers(windowCreatedTabsUrls, mWindowTabsUrls)) {
                             let clonedStorage = Object.assign({}, storage);
                             windowCreated.monitoring = true;
@@ -177,7 +174,7 @@ chrome.windows.onRemoved.addListener((windowId) => {
         delete storage.state.windows.monitorWindows[windowId];
         let newId = "_" + windowId;
         if (newId in Object.keys(storage.state.windows.monitorWindows)) {
-            newId = guid();
+            newId = "_" + guid();
         }
         removedWindow.localId = newId;
         storage.state.windows.monitorWindows[newId] = removedWindow;
